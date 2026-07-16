@@ -1,0 +1,70 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import FaqAccordion from "@/components/FaqAccordion";
+import Reveal from "@/components/Reveal";
+import { faqs, siteConfig } from "@/lib/content";
+
+export const metadata: Metadata = {
+  title: "FAQs",
+  description:
+    "Answers to the questions cybersecurity leaders most often ask Fynix about website performance, SEO, lead generation, and unified growth systems.",
+  alternates: { canonical: "/faqs" },
+};
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
+};
+
+export default function FaqsPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+
+      <section className="pt-12 md:pt-20 pb-24 md:pb-32 bg-gradient-to-b from-white to-background-soft">
+        <Reveal className="max-w-4xl mx-auto px-6 text-center">
+          <span className="text-xs uppercase tracking-widest text-accent font-semibold font-mono">
+            Queries
+          </span>
+          <h1 className="font-serif text-4xl md:text-6xl text-primary font-normal mt-3 leading-tight">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-text-muted text-base md:text-lg font-light leading-relaxed mt-6">
+            The questions cybersecurity leaders ask most often before starting an engagement with{" "}
+            {siteConfig.name}.
+          </p>
+        </Reveal>
+      </section>
+
+      <section className="py-20 md:py-28 bg-white">
+        <Reveal className="max-w-4xl mx-auto px-6">
+          <FaqAccordion faqs={faqs} />
+        </Reveal>
+      </section>
+
+      <section className="py-20 md:py-28 bg-background-soft">
+        <Reveal className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="font-serif text-4xl md:text-5xl text-primary font-normal leading-tight">
+            Still have a question?
+          </h2>
+          <div className="mt-10">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200"
+            >
+              Ask us directly
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+    </>
+  );
+}
