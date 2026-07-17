@@ -34,8 +34,8 @@ html.lenis body {
   --text-muted: #565D64;
   --primary: #0C1E2E;
   --primary-hover: #172D40;
-  --accent: #A47E3B;
-  --accent-hover: #B4924A;
+  --accent: #E9AF88;
+  --accent-hover: #D89870;
   --border: #E8E7E3;
 }
 
@@ -60,6 +60,11 @@ html.lenis body {
   }
 }
 
+@keyframes marqueeScroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -79,6 +84,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
+}
+
+/* Editorial italic: Cormorant is used wherever `.font-serif` is set to italic —
+   headline pivots (Growth Partner, into vision.) and the italicized H1/H2s in
+   the Initiation-style closing CTAs. Body italic keeps Figtree italic. */
+@layer utilities {
+  .font-serif.italic,
+  .italic.font-serif {
+    font-family: var(--font-cormorant), Georgia, serif !important;
+  }
 }
 
 /* Tailwind v4 dropped default pointer cursor on buttons — restore it. */
@@ -104,5 +119,304 @@ select:not(:disabled) {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #B8B6B0;
+}
+
+/* -----------------------------------------------------------
+   Premium CTA interactions — Linear/Stripe-style micro-motion.
+   Layered on top of existing Tailwind utility strings.
+   ----------------------------------------------------------- */
+
+:root {
+  --cta-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --cta-dur: 180ms;
+}
+
+/* Primary pill: lift, deepen shadow, slide inner arrow */
+.cta-primary {
+  transition:
+    transform var(--cta-dur) var(--cta-ease),
+    background-color var(--cta-dur) var(--cta-ease),
+    box-shadow var(--cta-dur) var(--cta-ease) !important;
+  will-change: transform;
+}
+.cta-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -16px rgba(12, 30, 46, 0.45);
+}
+.cta-primary:active {
+  transform: translateY(0);
+  transition-duration: 80ms;
+}
+.cta-primary svg {
+  transition: transform var(--cta-dur) var(--cta-ease);
+}
+.cta-primary:hover svg {
+  transform: translateX(3px);
+}
+
+/* Secondary pill: lift, border darken, subtle bg lift */
+.cta-secondary {
+  transition:
+    transform var(--cta-dur) var(--cta-ease),
+    background-color var(--cta-dur) var(--cta-ease),
+    border-color var(--cta-dur) var(--cta-ease),
+    color var(--cta-dur) var(--cta-ease) !important;
+  will-change: transform;
+}
+.cta-secondary:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary) !important;
+}
+.cta-secondary:active {
+  transform: translateY(0);
+  transition-duration: 80ms;
+}
+
+/* Eyebrow link: underline animates from full → collapse → new color grows in */
+.cta-underline {
+  position: relative;
+  border-bottom-color: transparent !important;
+}
+.cta-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(1);
+  transform-origin: right center;
+  transition: transform 260ms var(--cta-ease);
+}
+.cta-underline:hover::after {
+  transform: scaleX(0);
+}
+.cta-underline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--primary);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 260ms var(--cta-ease);
+  transition-delay: 60ms;
+}
+.cta-underline:hover::before {
+  transform: scaleX(1);
+}
+
+/* Focus-visible: gold ring, respects shape */
+.cta-primary:focus-visible,
+.cta-secondary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 9999px;
+}
+.cta-underline:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Reduced motion respect — kill transforms and transitions */
+@media (prefers-reduced-motion: reduce) {
+  .cta-primary,
+  .cta-secondary,
+  .cta-underline,
+  .cta-primary svg,
+  .cta-underline::after,
+  .cta-underline::before {
+    transition: none !important;
+  }
+  .cta-primary:hover,
+  .cta-secondary:hover,
+  .cta-primary:hover svg {
+    transform: none !important;
+  }
+  .cta-underline:hover::after {
+    transform: scaleX(1);
+  }
+  .cta-underline:hover::before {
+    transform: scaleX(0);
+  }
+}
+
+/* -----------------------------------------------------------
+   Split-column panels — Four Growth Acts, magazine layout.
+   Default: 4 equal vertical slabs with rotated titles + spine.
+   Hover: active panel expands (flex-grow), neighbours compress,
+   accent wash fades in, expanded content fades up.
+   ----------------------------------------------------------- */
+.act-panel {
+  position: relative;
+  isolation: isolate;
+  background: white;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 220px;
+  transition:
+    flex-grow 620ms var(--cta-ease),
+    background-color 320ms var(--cta-ease);
+  will-change: flex-grow;
+}
+
+/* When any panel is active: non-active panels compress, active one expands.
+   Both selectors must share the parent-class chain so the active rule outruns
+   the compress rule on specificity (0,4,0) > (0,3,0). */
+.act-panels[data-any-active="true"] .act-panel {
+  flex-grow: 0.55;
+}
+.act-panels[data-any-active="true"] .act-panel[data-active="true"] {
+  flex-grow: 3;
+  background-color: color-mix(in oklab, var(--act-to, white) 22%, white);
+}
+
+/* Left accent spine, thickens when active */
+.act-panel__spine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  z-index: 2;
+  background: var(--act-from, var(--accent));
+  transition: width 420ms var(--cta-ease);
+}
+.act-panel[data-active="true"] .act-panel__spine {
+  width: 5px;
+}
+
+/* Diagonal accent wash — appears on active panel */
+.act-panel__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    160deg,
+    transparent 20%,
+    var(--act-to, transparent) 120%
+  );
+  opacity: 0;
+  transition: opacity 520ms var(--cta-ease);
+}
+.act-panel[data-active="true"] .act-panel__wash {
+  opacity: 0.85;
+}
+
+/* Oversized italic numeral watermark, revealed on hover */
+.act-panel__watermark {
+  position: absolute;
+  right: -0.04em;
+  bottom: -0.28em;
+  z-index: 0;
+  pointer-events: none;
+  font-size: 14rem;
+  line-height: 0.8;
+  color: var(--act-ink, var(--primary));
+  opacity: 0;
+  transform: translate3d(24px, 24px, 0);
+  transition:
+    opacity 620ms var(--cta-ease),
+    transform 620ms var(--cta-ease);
+}
+.act-panel[data-active="true"] .act-panel__watermark {
+  opacity: 0.16;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Collapsed (default) content — book-spine vertical title */
+.act-panel__collapsed {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 1.75rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  transition: opacity 260ms var(--cta-ease);
+}
+.act-panel__vtitle {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  transition: color 260ms var(--cta-ease);
+}
+.act-panel:hover .act-panel__vtitle {
+  color: var(--accent);
+}
+.act-panel[data-active="true"] .act-panel__collapsed {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 180ms;
+}
+
+/* Expanded content — horizontal layout with details */
+.act-panel__expanded {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 380ms var(--cta-ease),
+    transform 480ms var(--cta-ease);
+}
+.act-panel[data-active="true"] .act-panel__expanded {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 180ms;
+}
+
+.act-panel__arrow {
+  display: inline-block;
+  transition: transform 200ms var(--cta-ease);
+}
+.act-panel:hover .act-panel__arrow {
+  transform: translateX(4px);
+}
+
+/* Mobile: revert to a stacked accordion — each panel always expanded */
+@media (max-width: 767px) {
+  .act-panel {
+    flex: 1 1 auto !important;
+    min-height: 0;
+  }
+  .act-panel__collapsed,
+  .act-panel__watermark {
+    display: none;
+  }
+  .act-panel__expanded {
+    position: static;
+    opacity: 1;
+    transform: none;
+    padding: 1.75rem 1.5rem;
+  }
+  .act-panel__wash {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .act-panel,
+  .act-panel__wash,
+  .act-panel__watermark,
+  .act-panel__collapsed,
+  .act-panel__expanded,
+  .act-panel__spine,
+  .act-panel__vtitle,
+  .act-panel__arrow {
+    transition: none !important;
+  }
 }
 

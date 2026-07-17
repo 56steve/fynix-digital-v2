@@ -10,13 +10,13 @@ export default function EngagementModels() {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <Reveal>
-          <div className="max-w-2xl">
+          <div className="max-w-4xl">
             <span className="text-xs uppercase tracking-widest text-accent font-semibold font-mono">
               How to work with us
             </span>
             <h2
               id="engagement-heading"
-              className="font-serif text-4xl md:text-5xl text-primary font-normal mt-3 leading-tight"
+              className="font-serif text-4xl md:text-5xl text-primary font-normal mt-3 leading-tight text-balance"
             >
               Three ways to start, one thing in common: a partnership anchored to pipeline.
             </h2>

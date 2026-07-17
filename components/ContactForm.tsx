@@ -275,7 +275,7 @@ export default function ContactForm() {
       <div className="pt-2 flex justify-center">
         <button
           type="submit"
-          className="group inline-flex items-center gap-3 pl-8 pr-2 py-2 bg-primary text-white hover:bg-primary-hover font-semibold rounded-full transition-all duration-200 text-sm shadow-sm"
+          className="group inline-flex items-center gap-3 pl-8 pr-2 py-2 bg-primary text-white hover:bg-primary-hover cta-primary font-semibold rounded-full transition-all duration-200 text-sm shadow-sm"
         >
           <span>Submit</span>
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white transition-transform duration-200 group-hover:translate-x-0.5">

@@ -75,13 +75,13 @@ const FRAGMENT_SHADER = /* glsl */ `
     // Base wash: soft cream lifts off pure white.
     vec3 col = mix(uColorBase, uColorSoft, smoothstep(0.0, 0.9, n));
 
-    // Warm gold bloom (broad, soft).
-    float gold = smoothstep(0.30, 0.85, q.y) * smoothstep(0.20, 0.80, r.x);
-    col = mix(col, uColorGold, gold * 0.55);
+    // Warm peach bloom (broad, soft) — primary accent wash.
+    float peachA = smoothstep(0.30, 0.85, q.y) * smoothstep(0.20, 0.80, r.x);
+    col = mix(col, uColorGold, peachA * 0.55);
 
-    // Navy depth (narrower, denser).
-    float navy = smoothstep(0.55, 0.95, r.y) * smoothstep(0.30, 0.90, n);
-    col = mix(col, uColorNavy, navy * 0.45);
+    // Secondary peach pocket for depth — keeps the field brand-only.
+    float peachB = smoothstep(0.55, 0.95, r.y) * smoothstep(0.30, 0.90, n);
+    col = mix(col, uColorGold, peachB * 0.35);
 
     // Very gentle vignette — keeps corners calm, doesn't erase the effect.
     float d = distance(vUv, vec2(0.5));
@@ -98,7 +98,7 @@ type RGB = [number, number, number];
 const COLOR_BASE:  RGB = [0.988, 0.988, 0.984]; // #FCFCFB
 const COLOR_SOFT:  RGB = [0.965, 0.961, 0.949]; // #F6F5F2
 const COLOR_NAVY:  RGB = [0.047, 0.118, 0.180]; // #0C1E2E
-const COLOR_GOLD:  RGB = [0.643, 0.494, 0.231]; // #A47E3B
+const COLOR_GOLD:  RGB = [0.914, 0.686, 0.533]; // #E9AF88
 
 export default function HeroBackdrop() {
   const hostRef = useRef<HTMLDivElement | null>(null);
@@ -257,8 +257,8 @@ export default function HeroBackdrop() {
         }}
       />
 
-      <span className="absolute top-6 left-6 md:top-10 md:left-10 h-4 w-4 border-l border-t border-border z-10" />
-      <span className="absolute top-6 right-6 md:top-10 md:right-10 h-4 w-4 border-r border-t border-border z-10" />
+      <span className="absolute top-24 left-6 md:top-28 md:left-10 h-4 w-4 border-l border-t border-border z-10" />
+      <span className="absolute top-24 right-6 md:top-28 md:right-10 h-4 w-4 border-r border-t border-border z-10" />
       <span className="absolute bottom-6 left-6 md:bottom-10 md:left-10 h-4 w-4 border-l border-b border-border z-10" />
       <span className="absolute bottom-6 right-6 md:bottom-10 md:right-10 h-4 w-4 border-r border-b border-border z-10" />
     </div>

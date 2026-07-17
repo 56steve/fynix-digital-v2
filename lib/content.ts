@@ -209,13 +209,26 @@ export const footerNav = [
   { href: "/contact", label: "Contact" },
 ];
 
-export const clients = [
-  "Eventus Security",
-  "PhotonMatters",
-  "PayWeek",
-  "Sentinel Grid",
-  "Arclight Labs",
-  "Halcyon CS",
+export type Client = { name: string; logo: string };
+
+export const clients: Client[] = [
+  { name: "CleanStart", logo: "/clients/cleanstart.webp" },
+  { name: "Counterpoint Risk", logo: "/clients/counterpoint-risk.webp" },
+  { name: "Creative Mind Technologies", logo: "/clients/creative-mind-technologies.webp" },
+  { name: "Currycook", logo: "/clients/currycook.webp" },
+  { name: "Eventus", logo: "/clients/eventus.webp" },
+  { name: "EZIGOLD", logo: "/clients/ezi-gold.webp" },
+  { name: "North Star", logo: "/clients/north-star.webp" },
+  { name: "Payweek", logo: "/clients/payweek.webp" },
+  { name: "PhotonMatters", logo: "/clients/photonmatters.webp" },
+  { name: "Pioneer Metals", logo: "/clients/pioneer-metals.webp" },
+  { name: "Support305", logo: "/clients/support305.webp" },
+  { name: "The Alfeco Foundation", logo: "/clients/the-alfeco-foundation.webp" },
+  { name: "Truenutri", logo: "/clients/truenutri.webp" },
+  { name: "Uplyift", logo: "/clients/uplyift.webp" },
+  { name: "Veer Aluminium", logo: "/clients/veer-alimunium.webp" },
+  { name: "Veer Energy", logo: "/clients/veer-energy.webp" },
+  { name: "Veer Steel Mile", logo: "/clients/veer-steel-mile.webp" },
 ];
 
 export type Stat = { value: string; label: string; sub?: string };
@@ -232,25 +245,21 @@ export type Testimonial = {
   name: string;
   role: string;
   company: string;
+  logo?: string;
 };
 
 export const testimonials: Testimonial[] = [
   {
     company: "CleanStart",
+    logo: "/clients/cleanstart-icon.webp",
     quote:
       "The Fynix Digital team feels more like part of CleanStart than an outside agency. They've helped us shape our website, design social media creatives, and create impactful presentations and datasheets. Always creative, always committed!",
     name: "Pallavi Puri",
     role: "Marketing Specialist",
   },
   {
-    company: "Dump My Junk LLC",
-    quote:
-      "Fynix Digital was able to help get us to rank at the top. They have worked so hard with our website which has been much appreciated!",
-    name: "Xavier Colmenares",
-    role: "Owner, Dump My Junk LLC",
-  },
-  {
     company: "PhotonMatters",
+    logo: "/clients/photonmatters-icon.webp",
     quote:
       "Excellent work by the Fynix Digital team in putting together a great website in a very short time.",
     name: "Tahseen Jamal",
@@ -258,20 +267,15 @@ export const testimonials: Testimonial[] = [
   },
   {
     company: "Eventus",
+    logo: "/clients/eventus-icon.webp",
     quote:
       "Fynix Digital has been our go-to digital marketing agency for over two years now. Brilliant execution, stunning design, and reliable delivery!",
     name: "Sanjay Khera",
     role: "Head of Marketing, Eventus",
   },
   {
-    company: "EZIGOLD",
-    quote:
-      "Professional, timely, and always delivering on budget. The Fynix team is fantastic to work with.",
-    name: "David Edwards",
-    role: "CEO, EZIGOLD, UK",
-  },
-  {
     company: "Currycook",
+    logo: "/clients/currycook.webp",
     quote:
       "They understood our needs and delivered a fully customized website with great creatives. Highly recommended!",
     name: "Mitesh Patel",

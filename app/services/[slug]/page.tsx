@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Reveal from "@/components/Reveal";
 import { acts, type Act } from "@/lib/content";
+import PreFooterBackdrop from "@/components/PreFooterBackdrop";
 
 type Params = { slug: Act["slug"] };
 
@@ -71,7 +72,7 @@ export default async function ServiceDetailPage(
             <div className="mt-10 flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200 text-center"
+                className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover cta-primary font-medium rounded-full shadow-sm transition-all duration-200 text-center"
               >
                 Start with {act.title}
                 <svg
@@ -91,7 +92,7 @@ export default async function ServiceDetailPage(
               </Link>
               <Link
                 href="/case-studies"
-                className="inline-flex items-center justify-center px-8 py-4 text-primary hover:text-accent font-medium rounded-full border border-border bg-white hover:bg-background-soft transition-all duration-200 text-center"
+                className="inline-flex items-center justify-center px-8 py-4 text-primary hover:text-accent font-medium rounded-full border border-border bg-white hover:bg-background-soft cta-secondary transition-all duration-200 text-center"
               >
                 See Related Work
               </Link>
@@ -194,7 +195,8 @@ export default async function ServiceDetailPage(
       </section>
 
       {/* CTA */}
-      <section className="py-24 md:py-32 bg-background-soft">
+      <section className="relative isolate overflow-hidden py-24 md:py-32 bg-transparent">
+        <PreFooterBackdrop />
         <Reveal className="max-w-4xl mx-auto px-6 text-center">
           <span className="text-xs uppercase tracking-widest text-accent font-semibold font-mono">
             Initiation
@@ -203,13 +205,15 @@ export default async function ServiceDetailPage(
             Ready to move on {act.title.toLowerCase()}?
           </h2>
           <p className="text-text-muted text-base font-light leading-relaxed mt-6 max-w-2xl mx-auto">
-            Most engagements begin with a short discovery conversation. We&apos;ll map where{" "}
-            {act.title} sits inside your current pipeline and where it would create the most lift.
+            Most engagements begin with a{" "}
+            <strong className="font-medium text-primary">short discovery conversation</strong>.
+            We&apos;ll map where {act.title} sits inside your current pipeline and where it would
+            create the <strong className="font-medium text-primary">most lift</strong>.
           </p>
           <div className="mt-10">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover cta-primary font-medium rounded-full shadow-sm transition-all duration-200"
             >
               Book a discovery call
               <svg

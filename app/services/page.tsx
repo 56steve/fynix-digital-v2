@@ -4,6 +4,7 @@ import ActsStack from "@/components/ActsStack";
 import ServiceCard from "@/components/ServiceCard";
 import Reveal from "@/components/Reveal";
 import EngagementModels from "@/components/EngagementModels";
+import PreFooterBackdrop from "@/components/PreFooterBackdrop";
 import { acts } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -25,8 +26,12 @@ export default function ServicesPage() {
             The Four Growth Acts. One connected system.
           </h1>
           <p className="text-text-muted text-base md:text-lg font-light leading-relaxed mt-6 max-w-2xl">
-            A potential client forms a brand perception in seconds. Our four interconnected pillars
-            build trust, guarantee speed, secure visibility, and generate pipeline.
+            A potential client forms a brand perception in{" "}
+            <strong className="font-medium text-primary">seconds</strong>. Our four interconnected
+            pillars <strong className="font-medium text-primary">build trust</strong>,{" "}
+            <strong className="font-medium text-primary">guarantee speed</strong>,{" "}
+            <strong className="font-medium text-primary">secure visibility</strong>, and{" "}
+            <strong className="font-medium text-primary">generate pipeline</strong>.
           </p>
         </Reveal>
       </section>
@@ -66,19 +71,21 @@ export default function ServicesPage() {
 
       <EngagementModels />
 
-      <section className="py-20 md:py-28 bg-white">
+      <section className="relative isolate overflow-hidden py-20 md:py-28 bg-transparent">
+        <PreFooterBackdrop />
         <Reveal className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-4xl md:text-5xl text-primary font-normal leading-tight">
+          <h2 className="font-serif italic text-4xl md:text-5xl text-primary font-normal leading-tight">
             Not sure which pillar to start with?
           </h2>
           <p className="text-text-muted text-base font-light mt-4">
             Most engagements begin with a discovery audit that maps the strongest lever for your
-            pipeline. It&apos;s a conversation, not a pitch.
+            pipeline. It&apos;s a{" "}
+            <strong className="font-medium text-primary">conversation, not a pitch</strong>.
           </p>
           <div className="mt-10">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover cta-primary font-medium rounded-full shadow-sm transition-all duration-200"
             >
               Book a discovery call
             </Link>
