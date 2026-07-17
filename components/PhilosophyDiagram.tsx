@@ -17,10 +17,10 @@ export default function PhilosophyDiagram() {
           aria-label="Growth flow: UX to Development to SEO to Lead Generation"
         >
           <line x1="120" y1="60" x2="880" y2="60" stroke="#E8E7E3" strokeWidth="2" strokeDasharray="6 4" />
-          <circle cx="120" cy="60" r="30" fill="#FCFCFB" stroke="#A47E3B" strokeWidth="2" />
+          <circle cx="120" cy="60" r="30" fill="#FCFCFB" stroke="#E9AF88" strokeWidth="2" />
           <text x="120" y="65" fontFamily="Figtree, system-ui, sans-serif" fontSize="12" fill="#0C1E2E" textAnchor="middle" fontWeight="bold">UX</text>
           <text x="120" y="110" fontFamily="Figtree, system-ui, sans-serif" fontSize="11" fill="#565D64" textAnchor="middle" fontWeight="bold">01. BUILD TRUST</text>
-          <path d="M 330 60 L 340 60" stroke="#A47E3B" strokeWidth="2" fill="none" />
+          <path d="M 330 60 L 340 60" stroke="#E9AF88" strokeWidth="2" fill="none" />
           <circle cx="370" cy="60" r="30" fill="#FCFCFB" stroke="#1D2125" strokeWidth="1" />
           <text x="370" y="65" fontFamily="Figtree, system-ui, sans-serif" fontSize="12" fill="#0C1E2E" textAnchor="middle">DEV</text>
           <text x="370" y="110" fontFamily="Figtree, system-ui, sans-serif" fontSize="11" fill="#565D64" textAnchor="middle">02. DELIVER SPEED</text>

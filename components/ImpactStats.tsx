@@ -17,9 +17,9 @@ export default function ImpactStats() {
             </span>
             <h2
               id="impact-heading"
-              className="font-serif text-3xl md:text-5xl font-normal mt-3 leading-tight"
+              className="font-serif text-2xl sm:text-3xl md:text-5xl font-normal mt-3 leading-tight text-balance"
             >
-              Nine years of measurable outcomes for cybersecurity teams.
+              Nine years, measurable outcomes.
             </h2>
           </div>
         </Reveal>

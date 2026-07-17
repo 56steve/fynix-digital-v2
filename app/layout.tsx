@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Figtree, Cormorant } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
@@ -9,6 +9,15 @@ import "./globals.css";
 const figtree = Figtree({
   variable: "--font-sans",
   subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const cormorant = Cormorant({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["italic"],
   display: "swap",
 });
 
@@ -41,7 +50,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${figtree.variable} h-full antialiased`}
+      className={`${figtree.variable} ${cormorant.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-accent selection:text-white">
         <SmoothScroll>

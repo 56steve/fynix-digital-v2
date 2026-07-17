@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { testimonials } from "@/lib/content";
 import Reveal from "./Reveal";
@@ -28,13 +29,11 @@ export default function TestimonialsRail() {
   const pause = useCallback(() => setPaused(true), []);
   const resume = useCallback(() => setPaused(false), []);
 
-  const jumpTo = useCallback(
-    (targetIdx: number) => {
-      const forward = ((targetIdx - activeIdx) + total) % total;
-      const delta = forward <= total / 2 ? forward : forward - total;
-      setStep((s) => s + delta);
+  const jumpToDupIdx = useCallback(
+    (dupIdx: number) => {
+      setStep(dupIdx - total);
     },
-    [activeIdx, total],
+    [total],
   );
 
   useEffect(() => {
@@ -178,7 +177,7 @@ export default function TestimonialsRail() {
                         aria-hidden={!isPrimaryCopy}
                         tabIndex={isPrimaryCopy ? 0 : -1}
                         aria-label={`${t.company}, testimonial from ${t.name}`}
-                        onClick={() => jumpTo(i)}
+                        onClick={() => jumpToDupIdx(dupIdx)}
                         onMouseEnter={isPrimaryCopy ? pause : undefined}
                         onMouseLeave={isPrimaryCopy ? resume : undefined}
                         onFocus={isPrimaryCopy ? pause : undefined}
@@ -186,16 +185,38 @@ export default function TestimonialsRail() {
                         className="relative shrink-0 h-16 w-16 md:h-[68px] md:w-[68px] flex items-center justify-center rounded-full"
                       >
                         <span
-                          className={`absolute rounded-full flex items-center justify-center font-serif font-medium transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                          className={`absolute rounded-full overflow-hidden flex items-center justify-center bg-white border transition-[inset,opacity,border-color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                             isActive
-                              ? "inset-[3px] bg-primary text-white text-base md:text-lg opacity-100"
-                              : "inset-3 md:inset-[14px] bg-white text-text-muted text-xs md:text-sm border border-border opacity-60 hover:opacity-100"
+                              ? "inset-[3px] border-transparent opacity-100"
+                              : "inset-3 md:inset-[14px] border-border opacity-60 hover:opacity-100"
                           }`}
                         >
-                          {initials}
+                          {t.logo ? (
+                            <Image
+                              src={t.logo}
+                              alt=""
+                              aria-hidden
+                              width={80}
+                              height={80}
+                              sizes="80px"
+                              className={`object-contain transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                                isActive ? "w-[70%] h-[70%]" : "w-[65%] h-[65%]"
+                              }`}
+                            />
+                          ) : (
+                            <span
+                              className={`font-serif font-medium ${
+                                isActive
+                                  ? "text-primary text-base md:text-lg"
+                                  : "text-text-muted text-xs md:text-sm"
+                              }`}
+                            >
+                              {initials}
+                            </span>
+                          )}
                         </span>
 
-                        {isActive && autoAdvance && isPrimaryCopy && (
+                        {isActive && autoAdvance && (
                           <svg
                             key={`ring-${step}`}
                             aria-hidden
@@ -222,7 +243,9 @@ export default function TestimonialsRail() {
                               strokeDasharray="295.31"
                               strokeDashoffset="295.31"
                               className="[animation:ringFill_var(--slide-duration)_linear_forwards]"
-                              onAnimationEnd={() => setStep((s) => s + 1)}
+                              onAnimationEnd={
+                                isPrimaryCopy ? () => setStep((s) => s + 1) : undefined
+                              }
                               style={
                                 {
                                   animationPlayState: paused ? "paused" : "running",

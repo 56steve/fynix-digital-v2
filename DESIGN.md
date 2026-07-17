@@ -31,8 +31,8 @@ Fynix positions itself as a **cybersecurity growth partner**. Every design and c
 | `--text-muted` | `#565D64` | Secondary text, labels |
 | `--primary` | `#0C1E2E` | Dark navy — buttons, headings, footer |
 | `--primary-hover` | `#172D40` | Primary hover state |
-| `--accent` | `#A47E3B` | Aged gold — the only accent color |
-| `--accent-hover` | `#B4924A` | Accent hover state |
+| `--accent` | `#E9AF88` | Warm peach — the only accent color |
+| `--accent-hover` | `#D89870` | Accent hover state |
 | `--border` | `#E8E7E3` | Hairlines, card borders, dividers |
 
 **Palette rules**
@@ -40,15 +40,34 @@ Fynix positions itself as a **cybersecurity growth partner**. Every design and c
 - Primary buttons stay navy. Gold-on-gold reads cheap.
 - The palette is warm; no cool greys, no pure white. Every neutral has cream in it.
 
+**Growth Act accents (per-service palette)**
+
+Four muted, editorial hues — one per Act — used to identify a service across the site. Source of truth: [`actAccents`](components/ActsStack.tsx). Each Act gets a `from` (light), `to` (lighter), and `ink` (dark) value.
+
+| Act | `from` | `to` | `ink` | Read |
+|---|---|---|---|---|
+| UI/UX | `#c9b57a` | `#f5ecd5` | `#5a4a1e` | champagne / bronze |
+| Development | `#7f9c95` | `#dce8e4` | `#243a35` | sage / forest |
+| SEO/AEO | `#b1786c` | `#efd9d1` | `#4c231c` | clay / oxblood |
+| Lead Generation | `#7a6e9c` | `#e0d9ef` | `#2b2144` | muted violet / indigo |
+
+**Rules**
+- **Permitted uses only**: the `01`–`04` numeral in `ink`, small icons, or the `from`→`to` diagonal used on ActsStack poster surfaces. The 4px `inset` edge marker is reserved for ActsStack's header bar and is not applied to other cards.
+- **Never** fill a card body, background, button, or large surface with these hues. Aged gold remains the single narrative accent; these hues are pure wayfinding.
+- **Never** introduce a fifth Act color without extending the Acts themselves. The palette is one-to-one with the four Growth Acts.
+- Contrast: `ink` values pass AA on cream when used at ≥12px semibold (their intended role — the numeric label).
+
 ---
 
 ## 3. Typography
 
-| Family | Role | Font | Fallback |
-|---|---|---|---|
-| Serif | Headlines, big numerals, italic accents | Lora | Georgia |
-| Sans | Body copy, UI, buttons | Figtree | system-ui |
-| Mono | Eyebrows, labels, counters, ticks | ui-monospace | SFMono-Regular |
+**One family: Figtree.** Loaded via `next/font/google` in `app/layout.tsx` and exposed as `--font-sans`. In `app/globals.css`, `--font-serif`, `--font-sans`, and `--font-mono` all resolve to `--font-sans`, so every `font-serif` / `font-sans` / `font-mono` class in the codebase renders Figtree. This is intentional — the semantic classes stay so we can pivot to a display face later without touching markup, but today they're all Figtree.
+
+| Class | Role | Rendered as |
+|---|---|---|
+| `font-serif` | Headlines, big numerals, italic accents | Figtree |
+| `font-sans` | Body copy, UI, buttons | Figtree |
+| `font-mono` | Eyebrows, labels, counters, ticks | Figtree |
 
 **Scale (Tailwind, common uses)**
 - `text-7xl` — hero H1 (desktop)
@@ -63,6 +82,7 @@ Fynix positions itself as a **cybersecurity growth partner**. Every design and c
 - Italic + accent-gold is the "expressive" pattern reserved for the emotional pivot of a headline (e.g. *Growth Partner*, *Not Copywriters.*).
 - Mono is uppercase, `tracking-widest`, ~10–12px. Never running text.
 - Body copy is `font-light` when set on cream, `font-normal` on white cards.
+- **Heading line count**: no headline wraps to more than **2 lines** at any breakpoint. Three-line headings read as body copy and break the editorial cadence. If a heading pushes past 2 lines: (a) widen the container (`max-w-3xl` → `max-w-4xl` → `max-w-5xl`), (b) add `text-balance` to redistribute break points, or (c) shorten the copy. Never let it wrap 3 or more lines and call it shipped.
 
 ---
 
@@ -158,11 +178,39 @@ Three signature elements that make the site feel authored:
 
 ---
 
-## 8. Accessibility
+## 8. Visual Semantics
+
+Every visual element on the site must earn its place by carrying meaning. Imagery is a communication channel, not decoration — if a visual doesn't explain, structure, or evidence something, it doesn't ship.
+
+**Use (good semantics)**
+- **Relevant diagrams** — architecture, data flow, threat model, engagement lifecycle.
+- **Meaningful icons** — inline SVGs that label a specific concept (a stage, a tool, a risk). Sized to context, one per idea.
+- **Labeled process flows** — steps with duration, activity, and deliverable (see `ProcessTimeline`).
+- **Architecture diagrams** — how systems, teams, or content pipelines fit together.
+- **Comparison tables** — before/after, us vs. generic agency, tier-by-tier scope.
+- **Infographics that explain a concept** — a metric visualized, a funnel annotated, a workflow mapped.
+
+**Don't use (poor semantics)**
+- **Generic stock photography** — laptops on desks, handshake shots, "diverse team in glass conference room."
+- **Decorative background imagery** — patterns or gradients that don't structure the page (the dot grid and gold glow in §7 are the only exceptions and are hero-only).
+- **Random office / lifestyle images** — anything that could belong to any brand.
+- **Unrelated illustrations** — abstract vector art, Freepik-style scenes, mascots.
+- **Icons with no clear purpose** — decorative flourishes, filler icons in card grids, "modern" 24×24 rounded-corner sets.
+
+**Rules**
+- Before adding any visual, state in one line what it explains. If you can't, remove it.
+- Prefer typography, tables, and diagrams over imagery. When in doubt, set it in type.
+- Icons appear only when they label a distinct concept in a set (e.g. one per engagement model). Never as ambient decoration.
+- Diagrams are built in-brand as inline SVG using the palette (`--primary`, `--accent`, `--border`). No third-party clip-art or 3D renders.
+- Every meaningful visual carries an accessible label (`<title>`, `aria-label`, or a caption). Decorative-only marks are `aria-hidden`.
+
+---
+
+## 9. Accessibility
 
 Minimum bar: **WCAG 2.2 AA**. Non-negotiable.
 
-- **Contrast**: gold accent (`#A47E3B`) passes AA on cream (`#F6F5F2`) at 16px semibold. On any smaller/lighter treatment, deepen to `#8B6A2E`.
+- **Contrast**: warm peach accent (`#E9AF88`) passes AA on cream (`#F6F5F2`) at 16px semibold. On any smaller/lighter treatment, deepen to `#8B6A2E`.
 - **Focus**: default browser outline is fine on inputs. Buttons and links MUST have a visible focus state (not `outline-none` unless replaced with a ring).
 - **Landmarks**: `<header>`, `<main>`, `<footer>`, `<nav aria-label>`, `<aside aria-label>` used correctly.
 - **Interactive patterns**:
@@ -175,7 +223,7 @@ Minimum bar: **WCAG 2.2 AA**. Non-negotiable.
 
 ---
 
-## 9. Content Sourcing
+## 10. Content Sourcing
 
 - Testimonials, client names, and case studies live in `lib/content.ts`. Do NOT hard-code in components.
 - Testimonial quotes are copied verbatim from fynix.digital — never paraphrase real people's words.
@@ -183,13 +231,14 @@ Minimum bar: **WCAG 2.2 AA**. Non-negotiable.
 
 ---
 
-## 10. Do / Don't
+## 11. Do / Don't
 
 **Do**
 - Reach for the accent color sparingly. If more than 8% of the fold is gold, reduce.
 - Use `SectionHeading` and `Reveal` as your defaults for new sections.
 - Prefer editorial motifs (corner marks, running heads, dot grids) over icons and stock illustrations.
 - Ship every number wrapped in `CountUp` + `tabular-nums`.
+- Justify every visual by what it explains: diagram, labeled flow, comparison, or infographic (see §8).
 
 **Don't**
 - Use em dashes anywhere. Not in copy, not in metadata, not in titles.
@@ -201,7 +250,7 @@ Minimum bar: **WCAG 2.2 AA**. Non-negotiable.
 
 ---
 
-## 11. When Something Doesn't Fit
+## 12. When Something Doesn't Fit
 
 If a request doesn't fit the system:
 1. First try to reframe the request into an existing pattern.

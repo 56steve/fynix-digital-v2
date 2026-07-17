@@ -3,17 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useLenis } from "lenis/react";
 import { acts, nav, siteConfig } from "@/lib/content";
 import Logo from "@/components/Logo";
 
 const HEADER_HEIGHT = 80;
 const MEGA_CLOSE_DELAY = 140;
 const MEGA_ITEM_STAGGER = 70;
+const SCROLL_THRESHOLD = 12;
 
 export default function Header() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const megaCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
 
@@ -61,34 +64,48 @@ export default function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [megaOpen]);
 
+  const darkSectionsRef = useRef<HTMLElement[]>([]);
+
   useEffect(() => {
-    const darkSections = Array.from(
+    darkSectionsRef.current = Array.from(
       document.querySelectorAll<HTMLElement>('[data-nav-theme="dark"]'),
     );
-    if (darkSections.length === 0) return;
+  }, [pathname]);
 
+  const applyScrollState = (y: number) => {
+    setScrolled(y > SCROLL_THRESHOLD);
+    const sections = darkSectionsRef.current;
+    if (sections.length === 0) {
+      setTheme("light");
+      return;
+    }
+    const overDark = sections.some((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top < HEADER_HEIGHT && r.bottom > 0;
+    });
+    setTheme(overDark ? "dark" : "light");
+  };
+
+  useLenis((lenis) => {
+    applyScrollState(lenis.scroll);
+  });
+
+  useEffect(() => {
     let ticking = false;
-    const check = () => {
-      ticking = false;
-      const overDark = darkSections.some((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top < HEADER_HEIGHT && r.bottom > 0;
-      });
-      setTheme(overDark ? "dark" : "light");
-    };
-
-    const onScroll = () => {
+    const schedule = () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(check);
+      requestAnimationFrame(() => {
+        ticking = false;
+        applyScrollState(window.scrollY);
+      });
     };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    schedule();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, []);
 
@@ -110,20 +127,46 @@ export default function Header() {
   }, [menuOpen]);
 
   const isDark = theme === "dark" && !menuOpen;
+  const pillActive = scrolled && !menuOpen;
 
   return (
     <>
       <header
         data-theme={theme}
-        className={`sticky top-0 z-50 backdrop-blur-md transition-colors duration-300 ${
-          menuOpen
-            ? "bg-white"
-            : isDark
-              ? "bg-primary/85"
-              : "bg-background/80"
-        }`}
+        className="sticky top-0 z-50 pt-2 md:pt-3"
       >
-        <div className="relative max-w-7xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
+        <div
+          aria-hidden
+          className={`pointer-events-none absolute inset-x-0 top-0 h-2 md:h-3 backdrop-blur-md transition-opacity duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            pillActive ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <div
+          className={`mx-auto transition-[max-width,padding-left,padding-right] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            pillActive
+              ? "max-w-7xl px-6 md:px-12"
+              : "max-w-full px-2 md:px-4"
+          }`}
+        >
+        <div
+          className={`relative rounded-2xl border transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            pillActive
+              ? `backdrop-blur-md shadow-[0_18px_50px_-24px_rgba(12,30,46,0.35)] ${
+                  isDark ? "border-white/20" : "border-black/[0.08]"
+                }`
+              : "backdrop-blur-none shadow-none border-transparent"
+          } ${
+            menuOpen
+              ? "bg-white"
+              : pillActive
+                ? isDark
+                  ? "bg-primary"
+                  : "bg-background"
+                : "bg-transparent"
+          }`}
+        >
+          <div className="relative h-16 flex items-center justify-between px-5 md:px-8">
+
           <Link
             href="/"
             className="flex items-center gap-2 group shrink-0"
@@ -206,7 +249,7 @@ export default function Header() {
                 setMenuOpen(false);
                 handleSamePageNav("/contact")(e);
               }}
-              className={`inline-flex items-center justify-center px-4 py-2.5 md:px-5 rounded-full text-[11px] md:text-xs font-semibold uppercase tracking-widest transition-colors duration-300 ${
+              className={`cta-primary inline-flex items-center justify-center px-4 py-2.5 md:px-5 rounded-full text-[11px] md:text-xs font-semibold uppercase tracking-widest transition-colors duration-300 ${
                 isDark
                   ? "bg-white text-primary hover:bg-accent hover:text-primary"
                   : "bg-primary text-white hover:bg-primary-hover"
@@ -256,7 +299,7 @@ export default function Header() {
           aria-hidden={!megaOpen}
           onMouseEnter={openMega}
           onMouseLeave={closeMegaDeferred}
-          className={`hidden md:block absolute inset-x-0 top-full bg-white/95 backdrop-blur-md shadow-[0_20px_40px_-30px_rgba(0,0,0,0.25)] transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`hidden md:block absolute inset-x-0 top-full mt-2 rounded-2xl border border-black/[0.06] bg-white/95 backdrop-blur-md shadow-[0_20px_40px_-30px_rgba(0,0,0,0.25)] transition-[opacity,transform,visibility] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             megaOpen
               ? "opacity-100 translate-y-0 visible"
               : "opacity-0 -translate-y-1 invisible"
@@ -269,7 +312,7 @@ export default function Header() {
               </span>
               <span aria-hidden className="h-px flex-1 bg-border" />
             </div>
-            <ul className="grid grid-cols-4 gap-6">
+            <ul>
               {acts.map((act, idx) => (
                 <li
                   key={act.slug}
@@ -288,15 +331,17 @@ export default function Header() {
                       closeMegaNow();
                       handleSamePageNav(`/services/${act.slug}`)(e);
                     }}
-                    className="group inline-flex items-center gap-2 font-serif text-xl text-primary hover:text-accent transition-colors"
+                    className="group flex items-center gap-4 py-3"
                   >
-                    <span className="font-mono text-xs text-accent font-semibold tabular-nums">
+                    <span className="font-mono text-xs text-accent font-semibold tabular-nums shrink-0 w-6">
                       {act.num}
                     </span>
-                    {act.title}
+                    <span className="font-serif text-xl text-primary group-hover:text-accent transition-colors">
+                      {act.title}
+                    </span>
                     <span
                       aria-hidden
-                      className="text-accent text-base opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                      className="ml-auto text-accent text-base opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
                     >
                       &rarr;
                     </span>
@@ -306,6 +351,8 @@ export default function Header() {
             </ul>
           </div>
         </div>
+      </div>
+      </div>
       </header>
 
       <div

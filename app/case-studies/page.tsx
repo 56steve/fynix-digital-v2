@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import CaseStudiesGrid from "@/components/CaseStudiesGrid";
+import PreFooterBackdrop from "@/components/PreFooterBackdrop";
 
 export const metadata: Metadata = {
   title: "Our Work",
@@ -36,9 +37,10 @@ export default function CaseStudiesPage() {
         </div>
       </section>
 
-      <section className="py-24 md:py-32 bg-white">
+      <section className="relative isolate overflow-hidden py-24 md:py-32 bg-transparent">
+        <PreFooterBackdrop />
         <Reveal className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-4xl md:text-5xl text-primary font-normal leading-tight">
+          <h2 className="font-serif italic text-4xl md:text-5xl text-primary font-normal leading-tight">
             Build what you&apos;ve been thinking about.
           </h2>
           <p className="text-text-muted text-base md:text-lg font-light mt-4">
@@ -48,7 +50,7 @@ export default function CaseStudiesPage() {
           <div className="mt-10">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover cta-primary font-medium rounded-full shadow-sm transition-all duration-200"
             >
               Start a conversation
             </Link>

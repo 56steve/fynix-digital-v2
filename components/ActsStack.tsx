@@ -4,7 +4,7 @@ import type { Act } from "@/lib/content";
 const HEADER_HEIGHT = 80;
 const STACK_PEEK = 68;
 
-const accents: Record<Act["slug"], { from: string; to: string; ink: string }> = {
+export const actAccents: Record<Act["slug"], { from: string; to: string; ink: string }> = {
   "ui-ux": { from: "#c9b57a", to: "#f5ecd5", ink: "#5a4a1e" },
   development: { from: "#7f9c95", to: "#dce8e4", ink: "#243a35" },
   seo: { from: "#b1786c", to: "#efd9d1", ink: "#4c231c" },
@@ -17,14 +17,14 @@ export default function ActsStack({ acts }: Props) {
   return (
     <div className="relative">
       {acts.map((act, i) => {
-        const accent = accents[act.slug];
+        const accent = actAccents[act.slug];
         const stickyTop = HEADER_HEIGHT + i * STACK_PEEK;
 
         return (
           <article
             key={act.slug}
             style={{ top: `${stickyTop}px`, zIndex: 10 + i }}
-            className="relative lg:sticky mb-6 lg:mb-0 rounded-2xl overflow-hidden border border-border bg-white shadow-[0_30px_60px_-40px_rgba(0,0,0,0.35)] lg:min-h-[calc(100vh-160px)]"
+            className="relative lg:sticky mb-6 lg:mb-0 rounded-2xl overflow-hidden border border-border bg-white shadow-[0_30px_60px_-40px_rgba(0,0,0,0.15)] lg:min-h-[calc(100vh-160px)] flex flex-col"
           >
             <header
               className="flex items-center gap-4 px-6 md:px-10 border-b border-border bg-white"
@@ -42,7 +42,7 @@ export default function ActsStack({ acts }: Props) {
               </span>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 p-6 md:p-10 lg:p-14">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 p-6 md:p-10 lg:p-14 flex-1">
               <div className="lg:col-span-6 flex flex-col justify-center">
                 <span className="text-xs uppercase tracking-widest text-accent font-semibold font-mono">
                   {act.subtitle}
@@ -71,7 +71,7 @@ export default function ActsStack({ acts }: Props) {
 
                 <Link
                   href={`/services/${act.slug}`}
-                  className="mt-10 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent border-b border-accent pb-1 hover:text-primary hover:border-primary transition-colors self-start"
+                  className="mt-10 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent border-b border-accent pb-1 hover:text-primary hover:border-primary cta-underline transition-colors self-start"
                 >
                   Explore {act.title}
                   <span aria-hidden>&rarr;</span>

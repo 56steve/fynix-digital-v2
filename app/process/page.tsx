@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ProcessTimeline from "@/components/ProcessTimeline";
 import Reveal from "@/components/Reveal";
+import PreFooterBackdrop from "@/components/PreFooterBackdrop";
 
 export const metadata: Metadata = {
   title: "Process",
@@ -136,19 +137,21 @@ export default function ProcessPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28 bg-background-soft">
+      <section className="relative isolate overflow-hidden py-20 md:py-28 bg-transparent">
+        <PreFooterBackdrop />
         <Reveal className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="font-serif text-4xl md:text-5xl text-primary font-normal leading-tight">
+          <h2 className="font-serif italic text-4xl md:text-5xl text-primary font-normal leading-tight">
             Ready to walk through this on a call?
           </h2>
           <p className="text-text-muted text-base font-light mt-4">
-            A 30-minute discovery conversation. No deck, no pitch. Just your goals and what a good
-            first step looks like.
+            A <strong className="font-medium text-primary">30-minute discovery</strong> conversation.{" "}
+            <strong className="font-medium text-primary">No deck, no pitch.</strong> Just your goals
+            and what a good first step looks like.
           </p>
           <div className="mt-10">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover font-medium rounded-full shadow-sm transition-all duration-200"
+              className="inline-flex items-center justify-center gap-3 px-8 py-4 bg-primary text-white hover:bg-primary-hover cta-primary font-medium rounded-full shadow-sm transition-all duration-200"
             >
               Book the conversation
             </Link>
