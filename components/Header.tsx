@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useLenis } from "lenis/react";
 import { acts, caseStudies, nav, siteConfig } from "@/lib/content";
+import DossierTile from "@/components/DossierTile";
 import Logo from "@/components/Logo";
 
 const HEADER_HEIGHT = 80;
@@ -161,7 +161,7 @@ export default function Header() {
         <div
           className={`relative rounded-2xl border transition-[background-color,border-color,box-shadow,backdrop-filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             pillActive
-              ? `backdrop-blur-md shadow-[0_18px_50px_-24px_rgba(12,30,46,0.35)] ${
+              ? `backdrop-blur-xl shadow-[0_18px_50px_-24px_rgba(12,30,46,0.35)] ${
                   isDark ? "border-white/20" : "border-black/[0.08]"
                 }`
               : "backdrop-blur-none shadow-none border-transparent"
@@ -170,8 +170,8 @@ export default function Header() {
               ? "bg-white"
               : pillActive
                 ? isDark
-                  ? "bg-primary"
-                  : "bg-background"
+                  ? "bg-primary/50"
+                  : "bg-white/40"
                 : "bg-transparent"
           }`}
         >
@@ -197,7 +197,7 @@ export default function Header() {
 
           <nav
             aria-label="Primary"
-            className={`hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10 text-sm font-medium transition-colors duration-300 ${
+            className={`hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-10 text-base font-medium transition-colors duration-300 ${
               isDark ? "text-white/70" : "text-text-muted"
             }`}
           >
@@ -317,7 +317,7 @@ export default function Header() {
         >
           <div className="max-w-7xl mx-auto px-6 md:px-10 py-6 md:py-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-              {/* LEFT — Acts list */}
+              {/* LEFT - Acts list */}
               <div className="lg:col-span-6">
                 <div className="flex items-center gap-6 mb-4">
                   <span className="text-xs uppercase tracking-widest text-text-muted font-mono">
@@ -364,7 +364,7 @@ export default function Header() {
                 </ul>
               </div>
 
-              {/* RIGHT — Featured case study */}
+              {/* RIGHT - Featured case study */}
               <div
                 className={`lg:col-span-6 flex flex-col h-full transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                   megaOpen
@@ -386,17 +386,18 @@ export default function Header() {
 
                 <Link
                   key={caseStudies[featuredIdx].slug}
-                  href={`/case-studies#${caseStudies[featuredIdx].slug}`}
+                  href={`/case-studies/${caseStudies[featuredIdx].slug}`}
                   onClick={closeMegaNow}
                   className="group flex flex-col flex-1 min-h-0 rounded-xl overflow-hidden border border-black/[0.06] bg-background-soft hover:border-accent/40 transition-colors"
                 >
-                  <div className="relative w-full flex-1 min-h-0 overflow-hidden bg-primary/5">
-                    <Image
-                      src={caseStudies[featuredIdx].image}
-                      alt={caseStudies[featuredIdx].name}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 500px"
-                      className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+                  <div className="relative w-full flex-1 min-h-0 overflow-hidden">
+                    <DossierTile
+                      domain={caseStudies[featuredIdx].domain}
+                      name={caseStudies[featuredIdx].name}
+                      iconUrl={caseStudies[featuredIdx].iconUrl}
+                      index={featuredIdx + 1}
+                      size="lg"
+                      showName
                     />
                   </div>
                   <div className="p-5 shrink-0">
@@ -406,15 +407,6 @@ export default function Header() {
                       </span>
                       <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">
                         {caseStudies[featuredIdx].domain}
-                      </span>
-                    </div>
-                    <div className="mt-3 flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-accent font-semibold">
-                      Read the case study
-                      <span
-                        aria-hidden
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      >
-                        &rarr;
                       </span>
                     </div>
                   </div>
