@@ -27,8 +27,9 @@ const SESSION_ORIGIN = "0% 100%";
 // corner stays close to the viewer. A small rotateX brings the top edge
 // forward for a subtle "leaning off the desk" feel.
 // Same face angle as Session — the two cards sit on parallel planes.
+// translateX pulls the calendar leftward so it sits close to the session card.
 const CALENDAR_TRANSFORM =
-  "rotateX(0deg) rotateY(35deg) rotateZ(-5deg) translateZ(40px)";
+  "translateX(-180px) rotateX(0deg) rotateY(35deg) rotateZ(-5deg) translateZ(40px)";
 const CALENDAR_ORIGIN = "0% 100%";
 
 export default function HeroCards() {
