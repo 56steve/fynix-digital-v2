@@ -26,7 +26,9 @@ const SESSION_ORIGIN = "0% 100%";
 // side and CONFIRM corner recede into the distance while the AVAILABLE
 // corner stays close to the viewer. A small rotateX brings the top edge
 // forward for a subtle "leaning off the desk" feel.
-const CALENDAR_TRANSFORM = "rotateY(28deg) rotateX(-4deg)";
+// Same face angle as Session — the two cards sit on parallel planes.
+const CALENDAR_TRANSFORM =
+  "rotateX(0deg) rotateY(35deg) rotateZ(-5deg) translateZ(40px)";
 const CALENDAR_ORIGIN = "0% 100%";
 
 export default function HeroCards() {
@@ -43,7 +45,7 @@ export default function HeroCards() {
 
       {/* GROWTH SESSION — hinges from bottom-right, left edge lifts out of plane */}
       <div
-        className="absolute left-7 md:left-12 lg:left-7 top-4 md:top-6 lg:top-8 w-[40px] xl:w-[520px] rounded-2xl bg-white border border-border overflow-hidden"
+        className="absolute left-7 md:left-12 lg:left-7 top-4 md:top-6 lg:top-8 w-[360px] lg:w-[440px] xl:w-[520px] rounded-2xl bg-white border border-border overflow-hidden"
         style={{
           transform: SESSION_TRANSFORM,
           transformOrigin: SESSION_ORIGIN,

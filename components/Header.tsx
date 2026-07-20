@@ -1,10 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { useLenis } from "lenis/react";
-import { acts, nav, siteConfig } from "@/lib/content";
+import { acts, caseStudies, nav, siteConfig } from "@/lib/content";
 import Logo from "@/components/Logo";
 
 const HEADER_HEIGHT = 80;
@@ -17,8 +18,17 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [featuredIdx, setFeaturedIdx] = useState(0);
+  const prevMegaOpen = useRef(false);
   const megaCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (!megaOpen && prevMegaOpen.current) {
+      setFeaturedIdx((i) => (i + 1) % caseStudies.length);
+    }
+    prevMegaOpen.current = megaOpen;
+  }, [megaOpen]);
 
   const handleSamePageNav =
     (href: string) => (e: MouseEvent<HTMLAnchorElement>) => {
@@ -127,7 +137,7 @@ export default function Header() {
   }, [menuOpen]);
 
   const isDark = theme === "dark" && !menuOpen;
-  const pillActive = scrolled && !menuOpen;
+  const pillActive = (scrolled || megaOpen) && !menuOpen;
 
   return (
     <>
@@ -306,49 +316,111 @@ export default function Header() {
           }`}
         >
           <div className="max-w-7xl mx-auto px-6 md:px-10 py-6 md:py-8">
-            <div className="flex items-center gap-6 mb-4">
-              <span className="text-xs uppercase tracking-widest text-text-muted font-mono">
-                Growth Acts
-              </span>
-              <span aria-hidden className="h-px flex-1 bg-border" />
-            </div>
-            <ul>
-              {acts.map((act, idx) => (
-                <li
-                  key={act.slug}
-                  style={{
-                    transitionDelay: megaOpen ? `${idx * MEGA_ITEM_STAGGER}ms` : "0ms",
-                  }}
-                  className={`transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    megaOpen
-                      ? "opacity-100 translate-y-0 blur-0"
-                      : "opacity-0 -translate-y-2 blur-[3px]"
-                  }`}
-                >
-                  <Link
-                    href={`/services/${act.slug}`}
-                    onClick={(e) => {
-                      closeMegaNow();
-                      handleSamePageNav(`/services/${act.slug}`)(e);
-                    }}
-                    className="group flex items-center gap-4 py-3"
-                  >
-                    <span className="font-mono text-xs text-accent font-semibold tabular-nums shrink-0 w-6">
-                      {act.num}
-                    </span>
-                    <span className="font-serif text-xl text-primary group-hover:text-accent transition-colors">
-                      {act.title}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="ml-auto text-accent text-base opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+              {/* LEFT — Acts list */}
+              <div className="lg:col-span-6">
+                <div className="flex items-center gap-6 mb-4">
+                  <span className="text-xs uppercase tracking-widest text-text-muted font-mono">
+                    Growth Acts
+                  </span>
+                  <span aria-hidden className="h-px flex-1 bg-border" />
+                </div>
+                <ul>
+                  {acts.map((act, idx) => (
+                    <li
+                      key={act.slug}
+                      style={{
+                        transitionDelay: megaOpen ? `${idx * MEGA_ITEM_STAGGER}ms` : "0ms",
+                      }}
+                      className={`transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                        megaOpen
+                          ? "opacity-100 translate-y-0 blur-0"
+                          : "opacity-0 -translate-y-2 blur-[3px]"
+                      }`}
                     >
-                      &rarr;
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+                      <Link
+                        href={`/services/${act.slug}`}
+                        onClick={(e) => {
+                          closeMegaNow();
+                          handleSamePageNav(`/services/${act.slug}`)(e);
+                        }}
+                        className="group flex items-center gap-4 py-3"
+                      >
+                        <span className="font-mono text-xs text-accent font-semibold tabular-nums shrink-0 w-6">
+                          {act.num}
+                        </span>
+                        <span className="font-serif text-xl text-primary group-hover:text-accent transition-colors">
+                          {act.title}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="ml-auto text-accent text-base opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"
+                        >
+                          &rarr;
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* RIGHT — Featured case study */}
+              <div
+                className={`lg:col-span-6 flex flex-col h-full transition-[opacity,transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  megaOpen
+                    ? "opacity-100 translate-y-0 blur-0"
+                    : "opacity-0 -translate-y-2 blur-[3px]"
+                }`}
+                style={{
+                  transitionDelay: megaOpen
+                    ? `${acts.length * MEGA_ITEM_STAGGER}ms`
+                    : "0ms",
+                }}
+              >
+                <div className="flex items-center gap-6 mb-4">
+                  <span className="text-xs uppercase tracking-widest text-text-muted font-mono">
+                    Featured Work
+                  </span>
+                  <span aria-hidden className="h-px flex-1 bg-border" />
+                </div>
+
+                <Link
+                  key={caseStudies[featuredIdx].slug}
+                  href={`/case-studies#${caseStudies[featuredIdx].slug}`}
+                  onClick={closeMegaNow}
+                  className="group flex flex-col flex-1 min-h-0 rounded-xl overflow-hidden border border-black/[0.06] bg-background-soft hover:border-accent/40 transition-colors"
+                >
+                  <div className="relative w-full flex-1 min-h-0 overflow-hidden bg-primary/5">
+                    <Image
+                      src={caseStudies[featuredIdx].image}
+                      alt={caseStudies[featuredIdx].name}
+                      fill
+                      sizes="(max-width: 1024px) 100vw, 500px"
+                      className="object-cover transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <div className="p-5 shrink-0">
+                    <div className="flex items-center justify-between">
+                      <span className="font-serif text-lg text-primary group-hover:text-accent transition-colors">
+                        {caseStudies[featuredIdx].name}
+                      </span>
+                      <span className="font-mono text-[10px] uppercase tracking-widest text-text-muted">
+                        {caseStudies[featuredIdx].domain}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-accent font-semibold">
+                      Read the case study
+                      <span
+                        aria-hidden
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      >
+                        &rarr;
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -358,7 +430,7 @@ export default function Header() {
       <div
         aria-hidden
         onClick={closeMegaNow}
-        className={`hidden md:block fixed inset-x-0 top-20 bottom-0 z-40 bg-primary/20 backdrop-blur-md transition-opacity duration-300 ${
+        className={`hidden md:block fixed inset-0 z-40 bg-primary/20 backdrop-blur-md transition-opacity duration-300 ${
           megaOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />

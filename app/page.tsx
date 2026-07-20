@@ -26,7 +26,7 @@ export default function Home() {
             <p className="text-text-muted text-base md:text-lg font-light leading-relaxed mt-6 max-w-2xl">
               We help cybersecurity companies transform their websites into{" "}
               <strong className="font-medium text-primary">growth engines</strong> through
-              better user experience, technical excellence, AI-ready SEO, and{" "}
+              better user experience, technical excellence, AI-ready SEO, and<br />
               <strong className="font-medium text-primary">predictable lead generation</strong>.
             </p>
 
